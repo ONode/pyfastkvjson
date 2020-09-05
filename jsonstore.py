@@ -7,11 +7,14 @@ from __future__ import absolute_import
 import json
 import os.path
 import sys
+import io
+import pyAesCrypt
+from os import stat, remove
 from collections import OrderedDict
 from copy import deepcopy
+from tempfile import mktemp
 
 __all__ = ["JsonStore"]
-
 
 class JsonStore(object):
     """A class to provide object based access to a JSON file"""
@@ -34,11 +37,29 @@ class JsonStore(object):
             self._save()
 
     def _load(self):
+        tempFile = mktemp()
+        # Check if file exists. Create it if it doesn't
         if not os.path.exists(self._path):
-            with open(self._path, "w+b") as store:
-                store.write("{}".encode("utf-8"))
-        with open(self._path, "r+b") as store:
-            raw_data = store.read().decode("utf-8")
+            empty_json_data = "{}".encode(self._encoding)
+            if self._secure:
+                with open(tempFile, "wb") as tempStore:
+                    tempStore.write(empty_json_data)
+                pyAesCrypt.encryptFile(tempFile, self._path, self._password, self._bufferSize)
+                os.remove(tempFile)
+            else:
+                with open(self._path, "w+b") as store:
+                    store.write(empty_json_data)
+
+        # Read the contents of the file
+        if self._secure:
+            pyAesCrypt.decryptFile(self._path, tempFile, self._password, self._bufferSize)
+            with open(tempFile, "rb") as tmp: 
+                raw_data = tmp.read().decode(self._encoding)
+            os.remove(tempFile)
+        else:
+            with open(self._path, "r+b") as store:
+                    raw_data = store.read().decode(self._encoding)
+
         if not raw_data:
             data = OrderedDict()
         else:
@@ -50,24 +71,35 @@ class JsonStore(object):
 
     def _save(self):
         temp = self._path + "~"
-        with open(temp, "wb") as store:
-            output = json.dumps(self._data, indent=self._indent)
-            store.write(output.encode("utf-8"))
+        tempFile = temp + "2" if self._secure else temp
+        with open(temp, "wb") as tempStore:
+            jsonStr = json.dumps(self._data, indent=self._indent)
+            data = jsonStr.encode(self._encoding)
+            tempStore.write(data)
+
+        if self._secure:
+            pyAesCrypt.encryptFile(temp, tempFile, self._password, self._bufferSize)
+            os.remove(temp)
         
         if sys.version_info >= (3, 3):
-            os.replace(temp, self._path)
+            os.replace(tempFile, self._path)
         elif os.name == "windows":
             os.remove(self._path)
-            os.rename(temp, self._path)
+            os.rename(tempFile, self._path)
         else:
-            os.rename(temp, self._path)
+            os.rename(tempFile, self._path)
 
-    def __init__(self, path, indent=2, auto_commit=True):
+    def __init__(self, path, indent=2, auto_commit=False, password=""):
+        secure = path.endswith(".aes")
         self.__dict__.update(
             {
                 "_auto_commit": auto_commit,
                 "_data": None,
                 "_path": path,
+                "_encoding": "utf-8",
+                "_secure": secure,
+                "_password": password if secure else None,
+                "_bufferSize": 64 * 1024 if secure else None,
                 "_indent": indent,
                 "_states": [],
             }
