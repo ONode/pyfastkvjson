@@ -16,6 +16,7 @@ from tempfile import mktemp
 
 __all__ = ["JsonStore"]
 
+
 class JsonStore(object):
     """A class to provide object based access to a JSON file"""
 
