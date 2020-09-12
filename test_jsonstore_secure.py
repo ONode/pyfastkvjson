@@ -10,9 +10,6 @@ from tempfile import mktemp
 
 from jsonstore import JsonStore
 
-# encryption/decryption buffer size - 64K
-
-
 class TransactionBreaker(Exception):
     pass
 
