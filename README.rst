@@ -108,9 +108,9 @@ file until all of the transactions have been closed.
     # here we see the value that was saved previously
     assert store.value == 1
 
-.. |Build Status| image:: https://travis-ci.org/Code0x58/python-jsonstore.svg?branch=master
-   :target: https://travis-ci.org/Code0x58/python-jsonstore
+.. |Build Status| image:: https://travis-ci.org/ONode/pyfastkvjson.svg?branch=master
+   :target: https://travis-ci.org/ONode/pyfastkvjson
 .. |Codacy Rating| image:: https://api.codacy.com/project/badge/Grade/37ea488773444de59469a3775be83faf
-   :target: https://www.codacy.com/app/evilumbrella-github/python-jsonstore?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Code0x58/python-jsonstore&amp;utm_campaign=Badge_Grade
+   :target: https://www.codacy.com/app/evilumbrella-github/python-jsonstore?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONode/pyfastkvjson&amp;utm_campaign=Badge_Grade
 .. |PyPi Package| image:: https://badge.fury.io/py/python-jsonstore.svg
    :target: https://pypi.org/project/python-jsonstore/

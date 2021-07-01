@@ -4,18 +4,35 @@ from textwrap import dedent
 
 from setuptools import setup
 
-here = path.abspath(path.dirname(__file__))
+_dir = os.path.dirname(__file__)
 
-with codecs.open(path.join(here, "README.rst"), encoding='utf-8') as f:
-    long_description = f.read()
+def find_version():
+    f = codecs.open('version', 'r', 'utf-8-sig')
+    line = f.readline()
+    f.close()
+    return line
+
+def finedescription():
+    line = ''
+    with open(os.path.join(_dir, 'README.rst')) as f:
+        line = f.read()
+    return line
+
+
+
+PACKAGE_VERSION = str(find_version())
+
+PACKAGE_LONG_DESCRIPTION = str(finedescription())
+
 
 setup(
-    name='python-jsonstore',
+    name='pyfastkvjson',
+    version=PACKAGE_VERSION,
     use_scm_version=True,
-    description="",
-    long_description=long_description,
+    description="Json key store with secured feature.",
+    long_description=PACKAGE_LONG_DESCRIPTION,
     long_description_content_type='text/x-rst',
-    author="Oliver Bristow",
+    author="Oliver Bristow & Heskemo",
     author_email='github+pypi@oliverbristow.co.uk',
     license='MIT',
     classifiers=dedent("""
@@ -37,8 +54,8 @@ setup(
         Topic :: Database
         Topic :: Software Development
     """).strip().split('\n'),
-    keywords='json key value store',
-    url='https://github.com/Code0x58/python-jsonstore/',
+    keywords='json key value store and more secured',
+    url='https://github.com/ONode/pyfastkvjson/',
     py_modules=dedent("""
         jsonstore
     """).strip().split('\n'),
