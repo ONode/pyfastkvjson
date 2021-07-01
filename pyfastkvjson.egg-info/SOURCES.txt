@@ -9,6 +9,13 @@ test_jsonstore.py
 test_jsonstore_secure.py
 update.sh
 version
+.idea/.gitignore
+.idea/misc.xml
+.idea/modules.xml
+.idea/pyfastkvjson.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml
 __pycache__/jsonstore.cpython-38.pyc
 pyfastkvjson.egg-info/PKG-INFO
 pyfastkvjson.egg-info/SOURCES.txt
