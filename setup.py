@@ -6,11 +6,13 @@ from setuptools import setup
 
 _dir = os.path.dirname(__file__)
 
+
 def find_version():
     f = codecs.open('version', 'r', 'utf-8-sig')
     line = f.readline()
     f.close()
     return line
+
 
 def finedescription():
     line = ''
@@ -19,11 +21,9 @@ def finedescription():
     return line
 
 
-
 PACKAGE_VERSION = str(find_version())
 
 PACKAGE_LONG_DESCRIPTION = str(finedescription())
-
 
 setup(
     name='pyfastkvjson',
@@ -32,7 +32,7 @@ setup(
     description="Json key store with secured feature.",
     long_description=PACKAGE_LONG_DESCRIPTION,
     long_description_content_type='text/x-rst',
-    author="Oliver Bristow & Heskemo",
+    author="Oliver Bristow, Heskemo",
     author_email='github+pypi@oliverbristow.co.uk',
     license='MIT',
     classifiers=dedent("""
@@ -40,8 +40,6 @@ setup(
         Intended Audience :: Developers
         License :: OSI Approved :: MIT License
         Operating System :: OS Independent
-        Programming Language :: Python :: 2
-        Programming Language :: Python :: 2.7
         Programming Language :: Python :: 3
         Programming Language :: Python :: 3.3
         Programming Language :: Python :: 3.4
