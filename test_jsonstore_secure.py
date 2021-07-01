@@ -5,10 +5,12 @@ from __future__ import absolute_import
 import json
 import os
 import unittest
-import pyAesCrypt
 from tempfile import mktemp
 
+import pyAesCrypt
+
 from jsonstore import JsonStore
+
 
 class TransactionBreaker(Exception):
     pass
@@ -84,7 +86,7 @@ class Tests(unittest.TestCase):
         decryptedTemp = store_file + "~2"
         pyAesCrypt.decryptFile(self._store_file, decryptedTemp, self.TEST_PASSWORD, self.BUFFER_SIZE)
         with open(decryptedTemp) as secure:
-                self.assertEqual(secure.read(), "{}")
+            self.assertEqual(secure.read(), "{}")
         os.remove(store_file)
         os.remove(decryptedTemp)
 
@@ -117,7 +119,6 @@ class Tests(unittest.TestCase):
 
     def test_assign_invalid_types(self):
         for method in (self._setattr, self._setitem):
-
             def assign(value):
                 return method("key", value)
 

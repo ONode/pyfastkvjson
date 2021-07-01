@@ -1,0 +1,16 @@
+.travis.yml
+LICENCE.md
+README.rst
+jsonstore.py
+n
+setup.cfg
+setup.py
+test_jsonstore.py
+test_jsonstore_secure.py
+update.sh
+version
+__pycache__/jsonstore.cpython-38.pyc
+pyfastkvjson.egg-info/PKG-INFO
+pyfastkvjson.egg-info/SOURCES.txt
+pyfastkvjson.egg-info/dependency_links.txt
+pyfastkvjson.egg-info/top_level.txt

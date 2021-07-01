@@ -107,7 +107,6 @@ class Tests(unittest.TestCase):
 
     def test_assign_invalid_types(self):
         for method in (self._setattr, self._setitem):
-
             def assign(value):
                 return method("key", value)
 

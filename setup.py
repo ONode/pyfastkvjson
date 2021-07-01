@@ -1,5 +1,5 @@
 import codecs
-from os import path
+import os
 from textwrap import dedent
 
 from setuptools import setup
