@@ -28,7 +28,7 @@ PACKAGE_LONG_DESCRIPTION = str(finedescription())
 setup(
     name='pyfastkvjson',
     version=PACKAGE_VERSION,
-    use_scm_version=True,
+    use_scm_version=False,
     description="Json key store with secured feature.",
     long_description=PACKAGE_LONG_DESCRIPTION,
     long_description_content_type='text/x-rst',
