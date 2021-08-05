@@ -63,6 +63,7 @@ pub_repo() {
   echo "pi pyfastkvjson==$VERSION"
   echo "pc pyfastkvjson==$VERSION"
   echo "wait 30 seconds until it gets uploaded online..."
+  echo "also read from https://pypi.org/project/pyfastkvjson/"
   # echo "ready and install it again.."
 }
 

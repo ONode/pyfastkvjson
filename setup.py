@@ -24,7 +24,9 @@ def finedescription():
 PACKAGE_VERSION = str(find_version())
 
 PACKAGE_LONG_DESCRIPTION = str(finedescription())
-
+requires_install = [
+    "pyAesCrypt>=6.0.0",
+]
 setup(
     name='pyfastkvjson',
     version=PACKAGE_VERSION,
@@ -57,5 +59,6 @@ setup(
     py_modules=dedent("""
         jsonstore
     """).strip().split('\n'),
+    install_requires=requires_install,
     setup_requires=["setuptools_scm", "wheel"],
 )

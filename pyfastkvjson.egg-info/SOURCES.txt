@@ -20,4 +20,5 @@ __pycache__/jsonstore.cpython-38.pyc
 pyfastkvjson.egg-info/PKG-INFO
 pyfastkvjson.egg-info/SOURCES.txt
 pyfastkvjson.egg-info/dependency_links.txt
+pyfastkvjson.egg-info/requires.txt
 pyfastkvjson.egg-info/top_level.txt

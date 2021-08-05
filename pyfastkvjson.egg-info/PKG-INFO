@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pyfastkvjson
-Version: 2.1.103
+Version: 2.1.104
 Summary: Json key store with secured feature.
 Home-page: https://github.com/ONode/pyfastkvjson/
 Author: Oliver Bristow, Heskemo
