@@ -17,6 +17,7 @@ version
 .idea/inspectionProfiles/Project_Default.xml
 .idea/inspectionProfiles/profiles_settings.xml
 __pycache__/jsonstore.cpython-38.pyc
+__pycache__/jsonstore.cpython-39.pyc
 pyfastkvjson.egg-info/PKG-INFO
 pyfastkvjson.egg-info/SOURCES.txt
 pyfastkvjson.egg-info/dependency_links.txt
