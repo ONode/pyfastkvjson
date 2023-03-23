@@ -80,13 +80,12 @@ Basics
 
 Additional encryptions
 ~~~~~~~~~~~~
+
 .. code:: python
 
-        TEST_PASSWORD="123456"
-        secret_file_name = mktemp() + ".aes"
-        store_ram = JsonStore(secret_file_name, indent=None, auto_commit=True, password=TEST_PASSWORD)
-
-
+    TEST_PASSWORD="123456"
+    secret_file_name = mktemp() + ".aes"
+    store_ram = JsonStore(secret_file_name, indent=None, auto_commit=True, password=TEST_PASSWORD)
 
 Transactions
 ~~~~~~~~~~~~
