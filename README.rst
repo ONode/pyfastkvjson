@@ -1,7 +1,12 @@
 |PyPi Package| |Build Status| |Codacy Rating|
 
+run command to install
+======================
+
+`pip install pyfastkvjson`
+
 jsonstore kv
-=========
+============
 
 This module provides a class that maps keys and values from a JSON file
 onto its attributes.
@@ -79,7 +84,7 @@ Basics
     [1, 2, 3, 4, 5, 6]
 
 Additional encryptions
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 

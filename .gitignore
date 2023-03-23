@@ -1,0 +1,5 @@
+venv
+build
+.eggs
+pyfastkvjson.egg-info
+.idea
