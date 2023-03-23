@@ -1,7 +1,7 @@
 #!/bin/sh
 . ./n
 
-testup
+# testup
 GIT_LOC=https://github.com/ONode/pyfastkvjson
 pub_repo
 gitpush

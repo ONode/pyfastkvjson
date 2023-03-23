@@ -1,6 +1,6 @@
 |PyPi Package| |Build Status| |Codacy Rating|
 
-jsonstore
+jsonstore kv
 =========
 
 This module provides a class that maps keys and values from a JSON file
@@ -77,6 +77,16 @@ Basics
     >>> store.list += [5, 6]
     >>> store.list
     [1, 2, 3, 4, 5, 6]
+
+Additional encryptions
+~~~~~~~~~~~~
+.. code:: python
+
+        TEST_PASSWORD="123456"
+        secret_file_name = mktemp() + ".aes"
+        store_ram = JsonStore(secret_file_name, indent=None, auto_commit=True, password=TEST_PASSWORD)
+
+
 
 Transactions
 ~~~~~~~~~~~~

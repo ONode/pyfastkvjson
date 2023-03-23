@@ -11,13 +11,16 @@ import sys
 from collections import OrderedDict
 from copy import deepcopy
 from tempfile import mktemp
-
 import pyAesCrypt
 
 __all__ = ["JsonStore"]
 
 STRING_TYPES = (str,)
 INT_TYPES = (int,)
+if sys.version_info < (3,):
+    STRING_TYPES += (unicode,)
+    INT_TYPES += (long,)
+
 VALUE_TYPES = (bool, int, float, type(None)) + INT_TYPES
 
 
@@ -75,9 +78,6 @@ class JsonStore(object):
             raise ValueError("Root element is not an object")
         self.__dict__["_data"] = data
 
-    def get_dump(self):
-        return self._data
-
     def _save(self):
         temp = self._path + "~"
         tempFile = temp + "2" if self._secure else temp
@@ -97,6 +97,9 @@ class JsonStore(object):
             os.rename(tempFile, self._path)
         else:
             os.rename(tempFile, self._path)
+
+    def get_dump(self):
+        return self._data
 
     def __init__(self, path, indent=2, auto_commit=False, password=None):
         self.__dict__.update(
@@ -120,10 +123,49 @@ class JsonStore(object):
         else:
             raise AttributeError(key)
 
+    def _has_key(self, key: str) -> bool:
+        try:
+            temp = self._data[key]
+            return True
+        except KeyError:
+            return False
+
+    def _store_object(self, s: dict):
+        f = self._flatten_dict(s)
+        for key, value in list(f.items()):
+            self._data[key] = deepcopy(value)
+            self._do_auto_commit()
+
+    @classmethod
+    def _flatten_dict(cls, d, parent_key="", sep="."):
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(cls._flatten_dict(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+
+    @classmethod
+    def _canonical_key(cls, key):
+        """Convert a set/get/del key into the canonical form."""
+        if cls._valid_string(key):
+            return tuple(key.split("."))
+
+        if isinstance(key, (tuple, list)):
+            key = tuple(key)
+            if not key:
+                raise TypeError("key must be a string or non-empty tuple/list")
+            return key
+
+        raise TypeError("key must be a string or non-empty tuple/list")
+
     @classmethod
     def _valid_object(cls, obj, parents=None):
         """
         Determine if the object can be encoded into JSON
+        Raise an exception if the object is not suitable for assignment.
         """
         # pylint: disable=unicode-builtin,long-builtin
         if isinstance(obj, (dict, list)):
@@ -162,57 +204,60 @@ class JsonStore(object):
             return False
 
     def __setattr__(self, key, value):
-        if not self._valid_object(value):
-            raise AttributeError
+        self._valid_object(value)
         self._data[key] = deepcopy(value)
         self._do_auto_commit()
 
     def __delattr__(self, key):
         del self._data[key]
 
-    def __get_obj(self, full_path):
-        """
-        Returns the object which is under the given path
-        """
-        if isinstance(full_path, (tuple, list)):
-            steps = full_path
-        else:
-            steps = full_path.split(".")
+    def __get_obj(self, steps):
+        """Returns the object which is under the given path."""
         path = []
         obj = self._data
-        if not full_path:
-            return obj
         for step in steps:
-            path.append(step)
+            if isinstance(obj, dict) and not self._valid_string(step):
+                # this is necessary because of the JSON serialisation
+                raise TypeError("%s is a dict and %s is not a string" % (path, step))
             try:
                 obj = obj[step]
-            except KeyError:
-                raise KeyError(".".join(path))
+            except (KeyError, IndexError, TypeError) as e:
+                raise type(e)("unable to get %s from %s: %s" % (step, path, e))
+            path.append(step)
         return obj
 
-    def __setitem__(self, name, value):
-        path, _, key = name.rpartition(".")
-        if self._valid_object(value):
-            dictionary = self.__get_obj(path)
-            dictionary[key] = deepcopy(value)
-            self._do_auto_commit()
-        else:
-            raise AttributeError
+    def __setitem__(self, key, value):
+        steps = self._canonical_key(key)
+        path, step = steps[:-1], steps[-1]
+        self._valid_object(value)
+        container = self.__get_obj(path)
+        if isinstance(container, dict) and not self._valid_string(step):
+            raise TypeError("%s is a dict and %s is not a string" % (path, step))
+        try:
+            container[step] = deepcopy(value)
+        except (IndexError, TypeError) as e:
+            raise type(e)("unable to set %s from %s: %s" % (step, path, e))
+        self._do_auto_commit()
 
     def __getitem__(self, key):
-        obj = self.__get_obj(key)
-        if obj is self._data:
-            raise KeyError
+        steps = self._canonical_key(key)
+        obj = self.__get_obj(steps)
         return deepcopy(obj)
 
-    def __delitem__(self, name):
-        if isinstance(name, (tuple, list)):
-            path = name[:-1]
-            key = name[-1]
-        else:
-            path, _, key = name.rpartition(".")
+    def __delitem__(self, key):
+        steps = self._canonical_key(key)
+        path, step = steps[:-1], steps[-1]
         obj = self.__get_obj(path)
-        del obj[key]
+        try:
+            del obj[step]
+        except (KeyError, IndexError, TypeError) as e:
+            raise type(e)("unable to delete %s from %s: %s" % (step, path, e))
 
     def __contains__(self, key):
-        return key in self._data
+        steps = self._canonical_key(key)
+        try:
+            self.__get_obj(steps)
+            return True
+        except (KeyError, IndexError, TypeError):
+            # this is rather permissive as the types are dynamic
+            return False
