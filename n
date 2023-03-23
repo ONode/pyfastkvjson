@@ -48,16 +48,16 @@ pub_repo() {
   sudo rm -rf dist
   rm -rf html
   rm -rf doc
-  python3 -m pdoc --html src/plotman
+  python3.9 -m pdoc --html src/plotman
   mv html/plotman docs/plotman
   rm html
 
-  python3 -m pip install --user --upgrade setuptools wheel
+  python3.9 -m pip install --user --upgrade setuptools wheel
   # python3 -m pip install --upgrade setuptools wheel
-  sudo python3 setup.py clean sdist bdist_wheel
+  sudo python3.9 setup.py clean sdist bdist_wheel
   # python3 -m pip install --user --upgrade twine
   # python3 -m twine upload --repository testpypi dist/*
-  python3 -m twine upload dist/* --verbose
+  python3.9 -m twine upload dist/* --verbose
   echo "please update the package by using this command"
   echo "python3 -m pip install pyfastkvjson==$VERSION"
   echo "pi pyfastkvjson==$VERSION"
@@ -69,6 +69,6 @@ pub_repo() {
 
 testup() {
   # python3 -m pytest
-  python3 test_jsonstore_secure.py
-  python3 test_jsonstore.py
+  python3.9 test_jsonstore_secure.py
+  python3.9 test_jsonstore.py
 }
